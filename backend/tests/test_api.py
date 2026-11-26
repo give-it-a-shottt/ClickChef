@@ -94,3 +94,12 @@ def test_detect_rejects_non_image():
     files = [("images", ("a.txt", b"hello", "text/plain"))]
     r = client.post("/api/ingredients/detect", files=files, headers={"x-forwarded-for": "test-ip-2"})
     assert r.status_code == 415
+
+
+def test_collections_groups_by_category():
+    r = client.get("/api/recipes/collections?limit=3").json()
+    assert set(r) == {"bowl", "soup", "side", "snack"}
+    assert all(len(v) <= 3 for v in r.values())
+    assert len(r["bowl"]) == 3 and len(r["soup"]) == 3  # 샘플: 밥·일품 3개, 국&찌개 3개 이상
+    assert all(x["category"] in ("밥", "일품") for x in r["bowl"])
+    assert all(x["category"] == "국&찌개" for x in r["soup"])

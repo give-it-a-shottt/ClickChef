@@ -45,10 +45,10 @@ export const searchQuery = (q: string) =>
     placeholderData: keepPreviousData,
   })
 
-/** 첫 방문처럼 최근 본 레시피가 없을 때 보여 줄 쉬운 요리 (날마다 바뀌어요) */
-export const featuredQuery = () =>
+/** 홈 화면 4개 섹션(한 그릇·국찌개·반찬·간식) — 날마다 바뀌어서 1시간 동안 다시 요청하지 않아요 */
+export const collectionsQuery = () =>
   queryOptions({
-    queryKey: ['featured'],
-    queryFn: ({ signal }) => api.get<RecipeSummary[]>('/recipes/featured', signal),
+    queryKey: ['collections'],
+    queryFn: ({ signal }) => api.get<Record<'bowl' | 'soup' | 'side' | 'snack', RecipeSummary[]>>('/recipes/collections?limit=12', signal),
     staleTime: 60 * 60_000,
   })

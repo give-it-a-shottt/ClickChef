@@ -48,6 +48,12 @@ def recommend(req: RecommendRequest) -> RecommendResponse:
     return RecommendResponse(total=len(ranked), items=items)
 
 
+@router.get("/collections", response_model=dict[str, list[RecipeSummary]], response_model_by_alias=True)
+def collections(limit: int = Query(default=12, ge=1, le=24)) -> dict[str, list[RecipeSummary]]:
+    """홈 화면 4개 섹션(한 그릇·국찌개·반찬·간식)을 요청 한 번에."""
+    return {k: [RecipeSummary.model_validate(r) for r in rows] for k, rows in repo.collections(limit).items()}
+
+
 @router.get("/featured", response_model=list[RecipeSummary], response_model_by_alias=True)
 def featured() -> list[RecipeSummary]:
     return [RecipeSummary.model_validate(r) for r in repo.featured()]

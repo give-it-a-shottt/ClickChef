@@ -6,7 +6,7 @@ import { usePhotoPicker } from '@/features/capture/usePhotoPicker'
 import { useStartDetection } from '@/features/capture/useStartDetection'
 import { useIsDesktop } from '@/lib/useMediaQuery'
 import { Dropzone } from './Dropzone'
-import { RecentRecipes } from './RecentRecipes'
+import { HomeRecipeSections } from './HomeRecipeSections'
 
 export default function HomePage() {
   return useIsDesktop() ? <DesktopHome /> : <MobileHome />
@@ -48,7 +48,7 @@ function MobileHome() {
           {picker.inputs}
         </section>
 
-        <RecentRecipes desktop={false} />
+        <HomeRecipeSections desktop={false} />
       </div>
     </>
   )
@@ -78,7 +78,7 @@ function DesktopHome() {
           <ol className="flex gap-8 pt-4">
             {STEPS.map((label, i) => (
               <li key={label} className="flex items-center gap-2">
-                <span className="flex size-7 items-center justify-center rounded-full bg-primary-soft text-label-14 text-primary-text">
+                <span className="flex size-7 items-center justify-center rounded-full bg-bg-regular text-label-14 text-text-main">
                   {i + 1}
                 </span>
                 <span className="text-body-m-15 text-text-main">{label}</span>
@@ -89,7 +89,7 @@ function DesktopHome() {
         <Dropzone />
       </section>
       <div className="mx-auto max-w-content pb-24">
-        <RecentRecipes desktop />
+        <HomeRecipeSections desktop />
       </div>
     </>
   )

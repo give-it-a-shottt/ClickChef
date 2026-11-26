@@ -1,9 +1,6 @@
-import { MagnifyingGlass, UploadSimple } from '@phosphor-icons/react'
+import { MagnifyingGlass } from '@phosphor-icons/react'
 import { Link, NavLink, useNavigate, useSearchParams } from 'react-router'
 import { Logo } from '@/components/Logo'
-import { Button } from '@/components/ui/Button'
-import { usePhotoPicker } from '@/features/capture/usePhotoPicker'
-import { useStartDetection } from '@/features/capture/useStartDetection'
 import { cx } from '@/lib/cx'
 
 const NAV = [
@@ -12,18 +9,16 @@ const NAV = [
   { to: '/my', label: '마이' },
 ]
 
-/** 피그마 GNB PC — 로고 + 메뉴(선택 = 굵게 + 아래 2px) + 검색 300 + 재료 사진 올리기 */
+/** 피그마 GNB PC — 로고 + 메뉴(선택 = 굵게 + 아래 2px) + 검색 300. 사진 올리기는 홈 업로드 영역에서 해요. */
 export function GnbPc() {
   const navigate = useNavigate()
   const [params] = useSearchParams()
-  const start = useStartDetection()
-  const picker = usePhotoPicker((files) => void start(files))
 
   return (
     <header className="sticky top-0 z-30 border-b border-line-light bg-bg-default">
       <div className="mx-auto flex h-[71px] max-w-content items-center gap-10 px-0">
         <Link to="/" aria-label="찰칵셰프 홈" className="shrink-0">
-          <Logo height={34} />
+          <Logo height={42} />
         </Link>
         <nav aria-label="주 메뉴" className="flex h-full gap-2">
           {NAV.map(({ to, label }) => (
@@ -63,10 +58,6 @@ export function GnbPc() {
               className="min-w-0 flex-1 bg-transparent text-body-14 text-text-main outline-none placeholder:text-text-sub-weak"
             />
           </form>
-          <Button size="m" leadingIcon={UploadSimple} onClick={picker.openAlbum}>
-            재료 사진 올리기
-          </Button>
-          {picker.inputs}
         </div>
       </div>
     </header>

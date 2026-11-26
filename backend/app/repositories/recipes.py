@@ -1,5 +1,6 @@
 """레시피 SQL. ORM 없이 직접 써서 어떤 쿼리가 나가는지 그대로 보이게 했어요."""
 
+import json
 from typing import Any
 
 from ..db import connection
@@ -100,6 +101,42 @@ def featured(limit: int = 8) -> list[dict[str, Any]]:
             """,
             (limit,),
         ).fetchall()
+
+
+# 홈 화면 섹션 — 식약처 요리 종류(RCP_PAT2)를 묶어요 (frontend/src/lib/category.ts와 같은 키)
+COLLECTIONS: dict[str, list[str]] = {
+    "bowl": ["밥", "일품"],
+    "soup": ["국&찌개"],
+    "side": ["반찬"],
+    "snack": ["후식"],
+}
+
+
+def collections(limit: int = 12) -> dict[str, list[dict[str, Any]]]:
+    """섹션마다 레시피를 날마다 다른 순서로 limit개씩, 쿼리 한 번에 가져와요 (사진 있는 레시피 먼저)."""
+    groups = {cat: key for key, cats in COLLECTIONS.items() for cat in cats}
+    with connection() as conn:
+        rows = conn.execute(
+            f"""
+            SELECT * FROM (
+              SELECT {SUMMARY_COLS}, grp,
+                     row_number() OVER (
+                       PARTITION BY grp ORDER BY (image_url IS NULL), md5(id::text || CURRENT_DATE::text)
+                     ) AS rn
+              FROM (
+                SELECT *, (%(groups)s::jsonb ->> category) AS grp FROM recipes
+              ) t
+              WHERE grp IS NOT NULL
+            ) s
+            WHERE rn <= %(limit)s
+            ORDER BY grp, rn
+            """,
+            {"groups": json.dumps(groups, ensure_ascii=False), "limit": limit},
+        ).fetchall()
+    out: dict[str, list[dict[str, Any]]] = {key: [] for key in COLLECTIONS}
+    for r in rows:
+        out[r["grp"]].append(r)
+    return out
 
 
 def categories_of(ids: list[int]) -> set[str]:

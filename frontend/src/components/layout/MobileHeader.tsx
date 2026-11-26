@@ -13,7 +13,7 @@ export function MainHeader() {
   return (
     <header className={`${bar} pr-1.5 pl-5`}>
       <Link to="/" aria-label="찰칵셰프 홈">
-        <Logo height={30} />
+        <Logo height={34} />
       </Link>
       <span className="flex-1" />
       <IconButton icon={MagnifyingGlass} label="레시피 검색" onClick={() => navigate('/search')} className="size-11" />
