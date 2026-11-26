@@ -129,7 +129,7 @@ function Group({ title, children }: { title: string; children: ReactNode }) {
 
 function Card({ title, description, children }: { title: string; description: string; children: ReactNode }) {
   return (
-    <section className="flex flex-col gap-4 rounded-card border border-line-light bg-bg-default px-7 py-6">
+    <section className="flex flex-col gap-4 rounded-card border border-line-regular bg-bg-default px-7 py-6">
       <div className="flex flex-col gap-1">
         <h2 className="text-title-18 text-text-main">{title}</h2>
         <p className="text-body-14 text-text-sub">{description}</p>
@@ -156,7 +156,7 @@ function DesktopMy({ open }: { open: (s: Sheet) => void }) {
       <h1 className="pt-12 pb-8 text-headline-32 text-text-main">마이</h1>
       <div className="flex items-start gap-10">
         <div className="flex w-85 shrink-0 flex-col items-center gap-4">
-          <div className="flex w-full flex-col items-center gap-5 rounded-card border border-line-light bg-bg-default px-6 py-7">
+          <div className="flex w-full flex-col items-center gap-5 rounded-card border border-line-regular bg-bg-default px-6 py-7">
             <span className="flex size-20 items-center justify-center rounded-full bg-primary-soft text-primary-accent">
               <User size={40} aria-hidden />
             </span>
