@@ -10,7 +10,7 @@
 from dataclasses import dataclass
 from typing import Literal
 
-MatchMode = Literal["all", "most", "full"]
+MatchMode = Literal["all", "most", "one", "full"]
 SortKey = Literal["match", "time", "missing"]
 
 SEASONING_PENALTY = 0.02
@@ -55,6 +55,8 @@ def passes(s: Scored, mode: MatchMode) -> bool:
         return False
     if mode == "full":
         return not s.missing
+    if mode == "one":  # 재료가 다 있거나 하나만 부족
+        return len(s.missing) <= 1
     if mode == "most":
         return s.have / s.need >= 0.5
     return True

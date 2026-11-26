@@ -66,7 +66,7 @@ class RecipeDetail(RecipeSummary):
 
 
 class RecommendFilters(CamelModel):
-    match: Literal["all", "most", "full"] = "all"
+    match: Literal["all", "most", "one", "full"] = "all"
     max_time: int | None = Field(default=None, ge=1, le=600)
     categories: list[str] = []
     servings: int | None = Field(default=None, ge=1, le=10)

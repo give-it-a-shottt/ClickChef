@@ -74,8 +74,8 @@ export interface DetectResponse {
 export type SortKey = 'match' | 'time' | 'missing'
 
 export interface RecommendFilters {
-  /** all: 하나라도 겹치면 / most: 절반 이상 / full: 모두 있음 */
-  match: 'all' | 'most' | 'full'
+  /** all: 하나라도 겹치면 / most: 절반 이상 / one: 하나만 부족 / full: 모두 있음 */
+  match: 'all' | 'most' | 'one' | 'full'
   maxTime: number | null
   categories: string[]
   servings: number | null

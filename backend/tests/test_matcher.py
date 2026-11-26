@@ -63,3 +63,9 @@ def test_normalize_synonyms_and_spaces():
     assert normalize_name("계란") == "달걀"
     assert normalize_name("다진 마늘(1큰술)") == "마늘"
     assert normalize_list(["파", "대파", "계란", "달걀"]) == ["대파", "달걀"]
+
+
+def test_one_mode_allows_single_missing():
+    have = ["김치", "밥", "스팸", "달걀", "양파"]  # 김치볶음밥은 대파 하나만 부족
+    ids = [s.id for s in rank([KIMCHI_RICE, OMELETTE, STEW], have, PANTRY, mode="one")]
+    assert 1 in ids and 3 not in ids
