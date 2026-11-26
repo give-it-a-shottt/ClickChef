@@ -18,7 +18,9 @@ jobs:
           node-version: 22
           cache: npm
           cache-dependency-path: frontend/package-lock.json
-      - run: npm ci
+      # Windows에서 만든 lock 파일과 Linux의 선택적 의존성 차이로 npm ci가 실패할 수 있어서
+      # npm install을 써요 (lock 파일의 버전은 그대로 지켜요)
+      - run: npm install --no-audit --no-fund
       - run: npm run lint
       - run: npm run build # tsc -b + vite build
 
