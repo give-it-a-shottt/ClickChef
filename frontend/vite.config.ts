@@ -27,8 +27,9 @@ export default defineConfig({
         // 자주 바뀌지 않는 라이브러리는 따로 묶어서 브라우저 캐시를 오래 쓰게 해요.
         manualChunks(id) {
           if (!id.includes('node_modules')) return
-          if (/[\/](react|react-dom|scheduler)[\/]/.test(id)) return 'react'
-          if (/[\/](react-router|@tanstack|zustand)[\/]/.test(id)) return 'vendor'
+          // Vite는 Windows에서도 모듈 경로를 / 로 맞춰 줘요
+          if (/node_modules\/(react|react-dom|scheduler)\//.test(id)) return 'react'
+          if (/node_modules\/(react-router|@tanstack|zustand)\//.test(id)) return 'vendor'
         },
       },
     },
