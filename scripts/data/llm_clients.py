@@ -41,7 +41,7 @@ def exaone_json(system: str, user: str) -> dict:
     body = {
         "model": env("EXAONE_MODEL", "k-exaone_v2.5"),
         "messages": [{"role": "system", "content": system}, {"role": "user", "content": user}],
-        "max_tokens": 6000,  # 추론 토큰 포함
+        "max_tokens": 24000,  # 추론 토큰 포함 (여러 레시피를 묶어 보낼 때 넉넉하게)
         "temperature": 0.3,
         "reasoning_effort": "low",
         "stream": False,
@@ -53,7 +53,7 @@ def exaone_json(system: str, user: str) -> dict:
         method="POST",
     )
     try:
-        with urllib.request.urlopen(req, timeout=120) as r:
+        with urllib.request.urlopen(req, timeout=300) as r:
             data = json.loads(r.read().decode("utf-8"))
     except urllib.error.HTTPError as e:
         if e.code == 429:
