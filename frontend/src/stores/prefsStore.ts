@@ -6,11 +6,11 @@ export type Theme = 'system' | 'light' | 'ivory' | 'dark' | 'warm-dark'
 export type Feedback = 'again' | 'good' | 'hard'
 
 export const THEME_LABEL: Record<Theme, string> = {
-  system: '시스템 설정',
   light: '라이트',
   ivory: '아이보리',
   dark: '다크',
   'warm-dark': '웜 다크',
+  system: '시스템 설정',
 }
 
 export const DEFAULT_SEASONINGS = ['소금', '간장', '설탕', '식용유', '고춧가루', '참기름']
@@ -46,7 +46,7 @@ export const usePrefsStore = create<PrefsState>()(
   persist(
     (set) => ({
       nickname: '요리하는 찰칵이',
-      theme: 'system',
+      theme: 'light', // 기본은 라이트 (OS 다크 모드와 상관없이)
       seasonings: DEFAULT_SEASONINGS,
       dislikes: [],
       servings: 1,
@@ -62,7 +62,17 @@ export const usePrefsStore = create<PrefsState>()(
       removeDislike: (v) => set((s) => ({ dislikes: s.dislikes.filter((x) => x !== v) })),
       setFeedback: (id, f) => set((s) => ({ feedback: { ...s.feedback, [id]: f } })),
     }),
-    { name: 'clickchef-prefs', version: 1, storage: createJSONStorage(() => safeLocalStorage) },
+    {
+      name: 'clickchef-prefs',
+      version: 2,
+      storage: createJSONStorage(() => safeLocalStorage),
+      // v1은 기본값이 '시스템 설정'이었어요. 직접 고른 게 아니라 기본값이 저장된 거라 라이트로 바꿔요.
+      migrate: (persisted, version) => {
+        const state = persisted as Partial<PrefsState>
+        if (version < 2 && state.theme === 'system') state.theme = 'light'
+        return state as PrefsState
+      },
+    },
   ),
 )
 
