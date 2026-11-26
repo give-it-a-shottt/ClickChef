@@ -71,14 +71,19 @@ SEASONINGS: set[str] = {
 }
 
 _PAREN = re.compile(r"\(.*?\)|\[.*?\]")
+# '다진 마늘', '저염 간장'처럼 손질·제품 수식어를 떼고 재료만 남겨요 (생크림·생강처럼 이름의 일부인 건 건드리지 않아요)
+_PREFIX = re.compile(r"^(다진|채썬|곱게간|저염|무염|저당|냉동|손질한|삶은|데친|불린)")
 _SPACE = re.compile(r"\s+")
 
 
 def normalize_name(raw: str) -> str:
     """'다진 마늘(1큰술)' → '마늘' 처럼 괄호·띄어쓰기를 지우고 대표 이름으로 바꿔요."""
     name = _PAREN.sub("", raw or "")
-    name = _SPACE.sub("", name).strip(" .,·-~")
-    return SYNONYMS.get(name, name)
+    name = _SPACE.sub("", name).strip(" .,·-~●•■◆▶<>:：")
+    if name in SYNONYMS:
+        return SYNONYMS[name]
+    stripped = _PREFIX.sub("", name)
+    return SYNONYMS.get(stripped, stripped) if len(stripped) >= 1 else name
 
 
 def normalize_list(names: list[str]) -> list[str]:
