@@ -1,0 +1,38 @@
+# 비밀값 — public 저장소라 절대 커밋하지 않아요
+.env
+.env.*
+!.env.example
+
+# Node
+node_modules/
+dist/
+*.local
+.vite/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# 데이터 파이프라인 중간 산출물 (최종 data/recipes.json만 커밋)
+data/raw/
+data/cache/
+
+# Vercel
+.vercel/
+
+# 에디터·OS
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
+
+# 테스트 스크린샷
+playwright-report/
+test-results/
+shots/
