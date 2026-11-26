@@ -34,3 +34,18 @@ def health() -> dict[str, object]:
 
 
 app.include_router(api)
+
+
+class EnsureApiPrefix:
+    """Vercel Services가 /api를 떼고 넘겨줘도 같은 라우트로 찾도록 경로 앞에 /api를 붙여요."""
+
+    def __init__(self, inner):
+        self.inner = inner
+
+    async def __call__(self, scope, receive, send):
+        if scope["type"] == "http" and not scope["path"].startswith("/api"):
+            scope = {**scope, "path": "/api" + scope["path"], "raw_path": b"/api" + scope.get("raw_path", b"")}
+        await self.inner(scope, receive, send)
+
+
+app.add_middleware(EnsureApiPrefix)
