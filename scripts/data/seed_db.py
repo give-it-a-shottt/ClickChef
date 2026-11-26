@@ -17,7 +17,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "backend"))
 
-from app.services.normalize import normalize_list, normalize_name  # noqa: E402
+from app.services.normalize import SEASONINGS, normalize_list, normalize_name  # noqa: E402
 
 try:
     from dotenv import load_dotenv
@@ -31,10 +31,12 @@ from psycopg.types.json import Jsonb  # noqa: E402
 
 
 def to_row(r: dict) -> dict:
-    ingredients = [
-        {"name": normalize_name(i["name"]), "amount": i.get("amount", ""), "kind": i.get("kind", "main")}
-        for i in r.get("ingredients", [])
-    ]
+    ingredients = []
+    for i in r.get("ingredients", []):
+        name = normalize_name(i["name"])
+        # 기본 양념 목록에 있는 재료는 LLM이 주재료로 봤어도 양념으로 맞춰요 (밀가루·레몬즙 등이 '부족'에 뜨지 않게)
+        kind = "seasoning" if name in SEASONINGS else i.get("kind", "main")
+        ingredients.append({"name": name, "amount": i.get("amount", ""), "kind": kind})
     steps = [
         {
             "order": s["order"],

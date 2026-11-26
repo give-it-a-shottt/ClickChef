@@ -19,7 +19,7 @@ from typing import Literal
 
 from common import CACHE, PARSED
 from llm_clients import call
-from pydantic import BaseModel, Field, ValidationError
+from pydantic import BaseModel, Field, ValidationError, field_validator
 
 from app.services.normalize import normalize_list, normalize_name
 
@@ -30,10 +30,29 @@ class EIngredient(BaseModel):
     kind: Literal["main", "seasoning"]
 
 
+def _clamp(lo: int, hi: int):
+    """범위를 벗어난 숫자는 버리지 않고 끝값으로 맞춰요"""
+    def f(v):
+        try:
+            return min(max(int(float(v)), lo), hi)
+        except (TypeError, ValueError):
+            return v
+    return f
+
+
+def _cut(n: int):
+    """너무 긴 글은 버리지 않고 n자에서 잘라요"""
+    def f(v):
+        return v.strip()[:n].rstrip() if isinstance(v, str) else v
+    return f
+
+
 class EStep(BaseModel):
     order: int
     ingredients: list[str] = []
     timerSec: int | None = Field(default=None, ge=0, le=7200)
+
+    _t = field_validator("timerSec", mode="before")(lambda v: None if v in (None, "", 0) else _clamp(0, 7200)(v))
 
 
 class Enrichment(BaseModel):
@@ -44,6 +63,11 @@ class Enrichment(BaseModel):
     ingredients: list[EIngredient]
     steps: list[EStep]
     tip: str | None = Field(default=None, max_length=120)
+
+    _s = field_validator("summary", mode="before")(_cut(60))
+    _tip = field_validator("tip", mode="before")(_cut(120))
+    _time = field_validator("timeMin", mode="before")(_clamp(5, 240))
+    _serv = field_validator("servings", mode="before")(_clamp(1, 8))
 
 
 class EnrichmentWithId(Enrichment):
