@@ -43,11 +43,12 @@ def find_candidates(
         ).fetchall()
 
 
-def get_summaries(ids: list[int]) -> list[dict[str, Any]]:
+def get_summaries(ids: list[int], with_ingredients: bool = False) -> list[dict[str, Any]]:
     if not ids:
         return []
+    cols = SUMMARY_COLS + (", main_ingredients, seasonings" if with_ingredients else "")
     with connection() as conn:
-        rows = conn.execute(f"SELECT {SUMMARY_COLS} FROM recipes WHERE id = ANY(%s)", (ids,)).fetchall()
+        rows = conn.execute(f"SELECT {cols} FROM recipes WHERE id = ANY(%s)", (ids,)).fetchall()
     order = {rid: i for i, rid in enumerate(ids)}
     return sorted(rows, key=lambda r: order.get(r["id"], 0))
 
@@ -74,6 +75,20 @@ def search(q: str, limit: int = 40) -> list[dict[str, Any]]:
             LIMIT %(limit)s
             """,
             {"q": q, "limit": limit},
+        ).fetchall()
+
+
+def featured(limit: int = 8) -> list[dict[str, Any]]:
+    """쉬운 요리 중 날마다 다른 순서로 골라요 (첫 방문 홈 화면용)."""
+    with connection() as conn:
+        return conn.execute(
+            f"""
+            SELECT {SUMMARY_COLS} FROM recipes
+            WHERE difficulty = '쉬움' AND time_min <= 30
+            ORDER BY md5(id::text || CURRENT_DATE::text)
+            LIMIT %s
+            """,
+            (limit,),
         ).fetchall()
 
 

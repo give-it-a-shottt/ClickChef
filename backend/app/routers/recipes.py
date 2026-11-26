@@ -1,8 +1,16 @@
 from fastapi import APIRouter, HTTPException, Query
 
 from ..repositories import recipes as repo
-from ..schemas import Match, RecipeDetail, RecipeSummary, RecommendItem, RecommendRequest, RecommendResponse
-from ..services.matcher import Candidate, rank
+from ..schemas import (
+    Match,
+    RecipeDetail,
+    RecipeSummary,
+    RecipeWithMatch,
+    RecommendItem,
+    RecommendRequest,
+    RecommendResponse,
+)
+from ..services.matcher import Candidate, rank, score_one
 from ..services.normalize import normalize_list
 
 router = APIRouter(prefix="/recipes", tags=["recipes"])
@@ -40,18 +48,38 @@ def recommend(req: RecommendRequest) -> RecommendResponse:
     return RecommendResponse(total=len(ranked), items=items)
 
 
+@router.get("/featured", response_model=list[RecipeSummary], response_model_by_alias=True)
+def featured() -> list[RecipeSummary]:
+    return [RecipeSummary.model_validate(r) for r in repo.featured()]
+
+
 @router.get("/search", response_model=list[RecipeSummary], response_model_by_alias=True)
 def search(q: str = Query(min_length=1, max_length=40)) -> list[RecipeSummary]:
     return [RecipeSummary.model_validate(r) for r in repo.search(q.strip())]
 
 
-@router.get("", response_model=list[RecipeSummary], response_model_by_alias=True)
-def list_by_ids(ids: str = Query(description="쉼표로 구분한 레시피 id", max_length=1000)) -> list[RecipeSummary]:
+@router.get("", response_model=list[RecipeWithMatch], response_model_by_alias=True)
+def list_by_ids(
+    ids: str = Query(description="쉼표로 구분한 레시피 id", max_length=1000),
+    have: str = Query(default="", max_length=600, description="내 재료(쉼표 구분) — 주면 일치도를 같이 계산해요"),
+    pantry: str = Query(default="", max_length=600, description="기본 양념(쉼표 구분)"),
+) -> list[RecipeWithMatch]:
+    """찜·최근 본 레시피 목록. 내 재료를 같이 주면 카드에 일치도 배지를 그릴 수 있어요."""
     try:
         id_list = [int(x) for x in ids.split(",") if x.strip()][:100]
     except ValueError as e:
         raise HTTPException(400, "id는 숫자로 보내 주세요") from e
-    return [RecipeSummary.model_validate(r) for r in repo.get_summaries(id_list)]
+    have_set = set(normalize_list(have.split(","))) if have else set()
+    pantry_set = set(normalize_list(pantry.split(","))) if pantry else set()
+    out: list[RecipeWithMatch] = []
+    for r in repo.get_summaries(id_list, with_ingredients=True):
+        match = None
+        if have_set:
+            s = score_one(Candidate(r["id"], r["category"], r["time_min"], r["main_ingredients"], r["seasonings"]),
+                          have_set, pantry_set, set())
+            match = Match(have=s.have, need=s.need, missing=s.missing)
+        out.append(RecipeWithMatch(**RecipeSummary.model_validate(r).model_dump(), match=match))
+    return out
 
 
 @router.get("/{recipe_id}", response_model=RecipeDetail, response_model_by_alias=True)

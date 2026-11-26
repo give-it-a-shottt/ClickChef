@@ -1,13 +1,12 @@
-import { Logo } from '@/components/Logo'
+import { RouterProvider } from 'react-router'
+import { Providers } from './providers'
+import { router } from './router'
+import '@/stores/prefsStore' // 저장된 테마를 바로 적용해요
 
 export function App() {
   return (
-    <main className="mx-auto flex max-w-content flex-col gap-4 p-6">
-      <Logo height={40} />
-      <p className="text-headline-24">냉장고 재료, 찍기만 하세요</p>
-      <button className="h-12 rounded-button bg-primary-default px-5 text-label-16 text-text-on-primary shadow-2">
-        재료 촬영하기
-      </button>
-    </main>
+    <Providers>
+      <RouterProvider router={router} />
+    </Providers>
   )
 }

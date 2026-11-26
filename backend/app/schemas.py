@@ -36,6 +36,10 @@ class RecommendItem(RecipeSummary):
     match: Match
 
 
+class RecipeWithMatch(RecipeSummary):
+    match: Match | None = None
+
+
 class RecommendResponse(CamelModel):
     total: int
     items: list[RecommendItem]

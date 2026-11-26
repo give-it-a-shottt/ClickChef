@@ -1,6 +1,6 @@
-import { keepPreviousData, queryOptions, useMutation } from '@tanstack/react-query'
+import { keepPreviousData, queryOptions } from '@tanstack/react-query'
 import { api } from './client'
-import type { DetectResponse, RecipeDetail, RecipeSummary, RecommendRequest, RecommendResponse } from './types'
+import type { RecipeDetail, RecipeSummary, RecipeWithMatch, RecommendRequest, RecommendResponse } from './types'
 
 /**
  * 쿼리 키와 요청을 한곳에 모았어요.
@@ -13,10 +13,15 @@ export const recipeQuery = (id: number) =>
     staleTime: Infinity,
   })
 
-export const recipesByIdsQuery = (ids: number[]) =>
+export const recipesByIdsQuery = (ids: number[], have: string[] = [], pantry: string[] = []) =>
   queryOptions({
-    queryKey: ['recipes', ids],
-    queryFn: ({ signal }) => api.get<RecipeSummary[]>(`/recipes?ids=${ids.join(',')}`, signal),
+    queryKey: ['recipes', ids, have, pantry],
+    queryFn: ({ signal }) => {
+      const q = new URLSearchParams({ ids: ids.join(',') })
+      if (have.length) q.set('have', have.join(','))
+      if (pantry.length) q.set('pantry', pantry.join(','))
+      return api.get<RecipeWithMatch[]>(`/recipes?${q}`, signal)
+    },
     staleTime: Infinity,
     enabled: ids.length > 0,
     placeholderData: keepPreviousData,
@@ -40,13 +45,10 @@ export const searchQuery = (q: string) =>
     placeholderData: keepPreviousData,
   })
 
-/** 사진 → 재료 인식 */
-export function useDetectIngredients() {
-  return useMutation({
-    mutationFn: (files: Blob[]) => {
-      const form = new FormData()
-      files.forEach((f, i) => form.append('images', f, `photo-${i}.jpg`))
-      return api.upload<DetectResponse>('/ingredients/detect', form)
-    },
+/** 첫 방문처럼 최근 본 레시피가 없을 때 보여 줄 쉬운 요리 (날마다 바뀌어요) */
+export const featuredQuery = () =>
+  queryOptions({
+    queryKey: ['featured'],
+    queryFn: ({ signal }) => api.get<RecipeSummary[]>('/recipes/featured', signal),
+    staleTime: 60 * 60_000,
   })
-}

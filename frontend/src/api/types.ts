@@ -28,6 +28,11 @@ export interface RecommendItem extends RecipeSummary {
   match: Match
 }
 
+/** 찜·최근 본 목록 — 내 재료를 같이 보냈을 때만 match가 있어요 */
+export interface RecipeWithMatch extends RecipeSummary {
+  match: Match | null
+}
+
 export interface RecommendResponse {
   total: number
   items: RecommendItem[]
