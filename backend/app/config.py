@@ -22,6 +22,7 @@ class Settings:
     database_url: str
     gemini_api_key: str
     gemini_model: str
+    gemini_fallback_model: str
     vision_mock: bool
     detect_daily_limit: int
     max_images: int = 3
@@ -35,7 +36,9 @@ def get_settings() -> Settings:
         # Vercel·Neon 연동은 DATABASE_URL을, 일부 템플릿은 POSTGRES_URL을 넣어 줘요
         database_url=os.getenv("DATABASE_URL") or os.getenv("POSTGRES_URL") or "",
         gemini_api_key=key,
-        gemini_model=os.getenv("GEMINI_MODEL", "gemini-2.5-flash"),
+        # 무료 모델은 사람이 몰리면 503이 나서, 기본 모델이 실패하면 예비 모델로 한 번 더 시도해요
+        gemini_model=os.getenv("GEMINI_MODEL", "gemini-3.5-flash-lite"),
+        gemini_fallback_model=os.getenv("GEMINI_FALLBACK_MODEL", "gemini-3.8-flash"),
         # 키가 없으면 자동으로 모의 모드
         vision_mock=_bool("VISION_MOCK") or not key,
         detect_daily_limit=int(os.getenv("DETECT_DAILY_LIMIT", "30")),

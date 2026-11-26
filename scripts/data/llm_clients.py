@@ -67,7 +67,7 @@ def gemini_json(system: str, user: str, schema: type) -> dict:
     from google.genai import errors, types
 
     client = genai.Client(api_key=env("GEMINI_API_KEY"), http_options=types.HttpOptions(timeout=120_000))
-    model = env("GEMINI_MODEL", "gemini-2.5-flash")
+    model = env("GEMINI_MODEL", "gemini-3.5-flash-lite")
     try:
         resp = client.models.generate_content(
             model=model,

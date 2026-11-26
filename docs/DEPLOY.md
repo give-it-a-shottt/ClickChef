@@ -94,7 +94,8 @@ $PY scripts/data/seed_db.py --replace          # 로컬 DB에 넣기
 | 이름 | 값 |
 |---|---|
 | `GEMINI_API_KEY` | AI Studio 키 |
-| `GEMINI_MODEL` | `gemini-2.5-flash` (AI Studio에서 무료로 쓸 수 있는 Flash 모델 이름으로) |
+| `GEMINI_MODEL` | `gemini-3.5-flash-lite` (빠르고 무료 사용자가 많아도 잘 응답해요) |
+| `GEMINI_FALLBACK_MODEL` | `gemini-3.8-flash` (기본 모델이 혼잡·한도 초과면 자동으로 이 모델로) |
 | `VISION_MOCK` | `0` |
 | `DETECT_DAILY_LIMIT` | `30` |
 | `RATE_LIMIT_SALT` | 아무 긴 문자열 (IP 해시용) |

@@ -41,3 +41,23 @@ def test_vision_normalizes_and_splits(monkeypatch):
     found, uncertain = vision.detect([vision.Image(b"x", "image/jpeg")], [])
     assert found == [("달걀", 0.95), ("대파", 0.7)]  # 계란/달걀은 하나로 합치고 더 높은 확신을 남겨요
     assert uncertain == [("두부", 0.4)]
+
+
+def test_gemini_falls_back_when_primary_is_busy(monkeypatch):
+    from google.genai import errors
+
+    class BusyThenOk:
+        def __init__(self):
+            self.models_tried = []
+
+        def generate_content(self, **kwargs):
+            self.models_tried.append(kwargs["model"])
+            if len(self.models_tried) == 1:
+                raise errors.ServerError(503, {"error": {"code": 503, "message": "busy", "status": "UNAVAILABLE"}})
+            return SimpleNamespace(parsed=gemini._Result.model_validate({"ingredients": [{"name": "달걀", "confidence": 0.9}]}), text=None)
+
+    fake = BusyThenOk()
+    monkeypatch.setattr(gemini, "_client", lambda: SimpleNamespace(models=fake))
+    monkeypatch.setattr(gemini, "get_settings", lambda: SimpleNamespace(gemini_model="primary", gemini_fallback_model="backup"))
+    assert gemini.detect_ingredients([vision.Image(b"x", "image/jpeg")], []) == [("달걀", 0.9)]
+    assert fake.models_tried == ["primary", "backup"]

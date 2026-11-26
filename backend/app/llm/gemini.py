@@ -9,7 +9,7 @@ from functools import lru_cache
 from typing import TYPE_CHECKING
 
 from google import genai
-from google.genai import types
+from google.genai import errors, types
 from pydantic import BaseModel, Field
 
 from ..config import get_settings
@@ -17,8 +17,10 @@ from ..config import get_settings
 if TYPE_CHECKING:
     from ..services.vision import Image
 
-TIMEOUT_MS = 25_000
+TIMEOUT_MS = 20_000
 MAX_ITEMS = 30
+# 이 오류면 예비 모델로 넘어가요: 없어진 모델(404), 무료 한도 초과(429), 서버 혼잡(500·503)
+RETRY_ON = {404, 429, 500, 503}
 
 
 class _Item(BaseModel):
@@ -60,17 +62,28 @@ def _config(model: str) -> types.GenerateContentConfig:
         temperature=0.1,
         max_output_tokens=1024,
     )
-    # 2.5 Flash는 생각(thinking)을 끄면 응답이 빨라지고 토큰도 아껴요
+    # 생각(thinking)을 줄이면 응답이 빨라지고 토큰도 아껴요 (lite 모델은 기본으로 짧게 생각해요)
     if "2.5-flash" in model:
         cfg.thinking_config = types.ThinkingConfig(thinking_budget=0)
+    elif model.startswith("gemini-3") and "lite" not in model:
+        cfg.thinking_config = types.ThinkingConfig(thinking_level="low")
     return cfg
 
 
 def detect_ingredients(images: "list[Image]", vocabulary: list[str]) -> list[tuple[str, float]]:
-    model = get_settings().gemini_model
+    s = get_settings()
     parts = [types.Part.from_bytes(data=img.data, mime_type=img.mime_type) for img in images]
     prompt = PROMPT.format(vocab=", ".join(vocabulary[:300]) or "(없음)")
-    resp = _client().models.generate_content(model=model, contents=[*parts, prompt], config=_config(model))
+    models = list(dict.fromkeys(m for m in (s.gemini_model, s.gemini_fallback_model) if m))
+    resp = None
+    for i, model in enumerate(models):
+        try:
+            resp = _client().models.generate_content(model=model, contents=[*parts, prompt], config=_config(model))
+            break
+        except errors.APIError as e:
+            if e.code not in RETRY_ON or i == len(models) - 1:
+                raise
+    assert resp is not None
 
     parsed = resp.parsed if isinstance(resp.parsed, _Result) else _Result.model_validate_json(resp.text or '{"ingredients": []}')
     out: list[tuple[str, float]] = []
