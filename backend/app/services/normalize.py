@@ -44,6 +44,9 @@ SYNONYMS: dict[str, str] = {
     "백설탕": "설탕",
     "황설탕": "설탕",
     "굵은소금": "소금",
+    "후춧가루": "후추",
+    "통후추": "후추",
+    "흰후춧가루": "후추",
     "꽃소금": "소금",
     "천일염": "소금",
     "포도씨유": "식용유",
@@ -79,6 +82,7 @@ _SPACE = re.compile(r"\s+")
 def normalize_name(raw: str) -> str:
     """'다진 마늘(1큰술)' → '마늘' 처럼 괄호·띄어쓰기를 지우고 대표 이름으로 바꿔요."""
     name = _PAREN.sub("", raw or "")
+    name = re.split(r"[(\[]", name)[0]  # 닫히지 않은 괄호 뒤는 버려요 ('양파(' → '양파')
     name = _SPACE.sub("", name).strip(" .,·-~●•■◆▶<>:：")
     if name in SYNONYMS:
         return SYNONYMS[name]

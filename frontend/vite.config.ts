@@ -37,7 +37,8 @@ export default defineConfig({
   server: {
     port: 5173,
     // 로컬 개발: /api 요청을 FastAPI(uvicorn)로 넘겨요. 운영에서는 Vercel이 같은 도메인으로 연결해요.
-    proxy: { '/api': 'http://localhost:8000' },
+    // localhost는 Windows에서 IPv6(::1)를 먼저 시도하다 2초씩 늦어져서 127.0.0.1로 적어요
+    proxy: { '/api': 'http://127.0.0.1:8000' },
   },
   build: {
     target: 'es2022',

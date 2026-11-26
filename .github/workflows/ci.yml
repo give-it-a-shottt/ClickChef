@@ -47,6 +47,5 @@ jobs:
           cache: pip
           cache-dependency-path: backend/requirements-dev.txt
       - run: pip install -r backend/requirements-dev.txt
-      - run: python scripts/data/seed_db.py data/fixtures/recipes.sample.json
       - run: python -m pytest -q
         working-directory: backend

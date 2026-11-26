@@ -10,6 +10,7 @@
 
 import json
 import re
+from collections import Counter
 
 from common import PARSED, RAW
 
@@ -41,9 +42,17 @@ def split_ingredients(text: str, dish: str) -> list[dict]:
             if not part:
                 continue
             m = AMOUNT_START.search(part)
-            name, amount = (part[: m.start()], part[m.start() :].strip()) if m and m.start() > 0 else (part, "")
+            if m and m.start() > 0:
+                pos = m.start()
+                if part[pos - 1] in "([":  # '양파(150g)'처럼 양을 괄호로 적은 경우 괄호부터 양으로
+                    pos -= 1
+                name, amount = part[:pos], part[pos:].strip()
+                if amount.startswith(("(", "[")):  # '(150g)' → '150g' (안쪽 괄호 '70g(1/10개)'는 그대로)
+                    amount = amount[1:].removesuffix(")").removesuffix("]").strip()
+            else:
+                name, amount = part, ""
             name = normalize_name(name)
-            if not name or len(name) > 15 or not re.search(r"[가-힣]", name):
+            if not name or len(name) > 15 or not re.search(r"[가-힣]", name) or name[0].isdigit() or ")" in name:
                 continue
             kind = "seasoning" if name in SEASONINGS else "main"
             if not any(i["name"] == name for i in items):
@@ -113,10 +122,35 @@ def parse_row(row: dict) -> dict:
     }
 
 
+def fix_glued_names(parsed: list[dict]) -> int:
+    """'다시마육수다시마'처럼 구역 이름이 붙은 재료를, 전체에서 자주 나오는 재료 이름(뒷부분)으로 바꿔요."""
+    counts = Counter(i["name"] for r in parsed for i in r["ingredients"])
+    known = sorted((n for n, c in counts.items() if c >= 5 and len(n) >= 2), key=len, reverse=True)
+    fixed = 0
+    for r in parsed:
+        seen: set[str] = set()
+        cleaned = []
+        for i in r["ingredients"]:
+            name = i["name"]
+            if len(name) >= 5 and counts[name] < 3:
+                tail = next((k for k in known if name.endswith(k) and k != name), None)
+                if tail:
+                    name, fixed = tail, fixed + 1
+            if name in seen:
+                continue
+            seen.add(name)
+            cleaned.append({**i, "name": name, "kind": "seasoning" if name in SEASONINGS else "main"})
+        r["ingredients"] = cleaned
+        for s in r["steps"]:
+            s["ingredients"] = [i["name"] for i in cleaned if i["name"] in s["text"]]
+    return fixed
+
+
 def main() -> None:
     rows = json.loads(RAW.read_text(encoding="utf-8"))
     parsed = [parse_row(r) for r in rows if r.get("RCP_SEQ") and r.get("RCP_NM")]
     parsed = [p for p in parsed if p["steps"] and p["ingredients"]]
+    print(f"붙은 재료 이름 {fix_glued_names(parsed)}개 정리")
     PARSED.write_text(json.dumps(parsed, ensure_ascii=False, indent=1), encoding="utf-8")
     print(f"{len(rows)}건 중 {len(parsed)}건 정리 → data/raw/parsed.json")
 

@@ -25,7 +25,7 @@ def recommend(req: RecommendRequest) -> RecommendResponse:
     excluded = normalize_list(req.excluded)
     f = req.filters
 
-    rows = repo.find_candidates(have, excluded, f.max_time, f.categories, f.servings)
+    rows = repo.find_candidates(have, excluded, f.max_time, f.categories, f.servings, pantry=pantry)
     by_id = {r["id"]: r for r in rows}
     candidates = [
         Candidate(r["id"], r["category"], r["time_min"], r["main_ingredients"], r["seasonings"]) for r in rows

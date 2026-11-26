@@ -1,7 +1,6 @@
-"""API 테스트 — 로컬 Docker PostgreSQL에 샘플 레시피가 들어 있어야 해요.
+"""API 테스트 — conftest.py가 'clickchef_test' DB를 만들고 샘플 레시피 12개를 넣어 줘요.
 
-  docker compose up -d && python scripts/data/seed_db.py data/fixtures/recipes.sample.json
-DB에 연결할 수 없으면 이 파일의 테스트는 건너뛰어요.
+로컬은 docker compose up -d 만 해 두면 돼요. DB에 연결할 수 없으면 이 파일의 테스트는 건너뛰어요.
 """
 
 import os

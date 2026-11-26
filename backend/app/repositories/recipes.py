@@ -13,9 +13,14 @@ def find_candidates(
     max_time: int | None,
     categories: list[str],
     servings: int | None,
+    pantry: list[str] | None = None,
     limit: int = 400,
 ) -> list[dict[str, Any]]:
-    """내 재료와 하나라도 겹치는 레시피만 GIN 인덱스(&&)로 먼저 추려요. 점수 계산은 matcher.py가 해요."""
+    """내 재료와 하나라도 겹치는 레시피만 GIN 인덱스(&&)로 먼저 추려요.
+
+    후보가 limit보다 많을 때 좋은 레시피가 잘리지 않도록, 가진 재료(내 재료+기본 양념) 비율이
+    높은 순으로 가져와요. 최종 점수·정렬은 matcher.py가 해요.
+    """
     sql = f"""
         SELECT {SUMMARY_COLS}, main_ingredients, seasonings
         FROM recipes
@@ -27,6 +32,10 @@ def find_candidates(
           AND (%(servings)s::int IS NULL
                OR (%(servings)s::int >= 3 AND servings >= 3)
                OR servings = %(servings)s::int)
+        ORDER BY
+          (SELECT count(*) FROM unnest(main_ingredients) AS x WHERE x = ANY(%(owned)s::text[]))::float
+            / greatest(cardinality(main_ingredients), 1) DESC,
+          time_min
         LIMIT %(limit)s
     """
     with connection() as conn:
@@ -34,6 +43,7 @@ def find_candidates(
             sql,
             {
                 "ings": ingredients,
+                "owned": list({*ingredients, *(pantry or [])}),
                 "excl": excluded,
                 "max_time": max_time,
                 "cats": categories,
