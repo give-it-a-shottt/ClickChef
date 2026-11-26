@@ -4,6 +4,7 @@ import json
 from typing import Any
 
 from ..db import connection
+from ..services.matcher import ALL_MAX_MISSING, ALL_MIN_RATIO
 
 SUMMARY_COLS = "id, name, summary, category, method, time_min, servings, difficulty, kcal, image_url"
 
@@ -19,13 +20,19 @@ def find_candidates(
 ) -> list[dict[str, Any]]:
     """내 재료와 하나라도 겹치는 레시피만 GIN 인덱스(&&)로 먼저 추려요.
 
-    후보가 limit보다 많을 때 좋은 레시피가 잘리지 않도록, 가진 재료(내 재료+기본 양념) 비율이
-    높은 순으로 가져와요. 최종 점수·정렬은 matcher.py가 해요.
+    matcher.py의 '전체' 기준(부족 주재료 ALL_MAX_MISSING개 이하 또는 ALL_MIN_RATIO 이상 보유)을
+    SQL에서도 먼저 걸어서, 하나만 겹치는 요리 때문에 좋은 후보가 limit에 잘리지 않게 해요.
+    가진 재료(내 재료+기본 양념) 비율이 높은 순으로 가져오고, 최종 점수·정렬은 matcher.py가 해요.
     """
     sql = f"""
         SELECT {SUMMARY_COLS}, main_ingredients, seasonings
         FROM recipes
+        CROSS JOIN LATERAL (
+          SELECT count(*) AS owned FROM unnest(main_ingredients) AS x WHERE x = ANY(%(owned)s::text[])
+        ) AS o
         WHERE main_ingredients && %(ings)s::text[]
+          AND (cardinality(main_ingredients) - o.owned <= %(max_missing)s
+               OR o.owned >= %(min_ratio)s * cardinality(main_ingredients))
           AND NOT (main_ingredients && %(excl)s::text[])
           AND NOT (seasonings && %(excl)s::text[])
           AND (%(max_time)s::int IS NULL OR time_min <= %(max_time)s::int)
@@ -33,10 +40,7 @@ def find_candidates(
           AND (%(servings)s::int IS NULL
                OR (%(servings)s::int >= 3 AND servings >= 3)
                OR servings = %(servings)s::int)
-        ORDER BY
-          (SELECT count(*) FROM unnest(main_ingredients) AS x WHERE x = ANY(%(owned)s::text[]))::float
-            / greatest(cardinality(main_ingredients), 1) DESC,
-          time_min
+        ORDER BY o.owned::float / greatest(cardinality(main_ingredients), 1) DESC, time_min
         LIMIT %(limit)s
     """
     with connection() as conn:
@@ -45,6 +49,8 @@ def find_candidates(
             {
                 "ings": ingredients,
                 "owned": list({*ingredients, *(pantry or [])}),
+                "max_missing": ALL_MAX_MISSING,
+                "min_ratio": ALL_MIN_RATIO,
                 "excl": excluded,
                 "max_time": max_time,
                 "cats": categories,

@@ -12,19 +12,19 @@ PANTRY = ["소금", "간장", "설탕", "식용유", "고춧가루", "참기름"
 def test_score_counts_owned_main_ingredients():
     s = score_one(KIMCHI_RICE, {"김치", "밥", "스팸", "달걀"}, set(PANTRY), set())
     assert (s.have, s.need, s.missing) == (4, 5, ["대파"])
-    assert s.score == 0.8
+    assert s.score == round(4 / 5.5, 4)  # 0.5를 더해 나눠요 (재료 적은 요리 쏠림 방지)
 
 
 def test_missing_seasoning_lowers_score_but_is_not_listed():
     s = score_one(STEW, {"김치", "돼지고기", "두부", "대파", "양파"}, set(PANTRY), set())
     assert s.missing == []  # 마늘은 양념이라 '부족'에 안 나와요
-    assert s.score == 1 - 0.02  # 마늘 하나만큼 깎여요
+    assert s.score == round(5 / 5.5 - 0.02, 4)  # 마늘 하나만큼 깎여요
 
 
 def test_pantry_counts_as_owned():
     # 기본 양념에 '대파'를 넣어 두면 가진 재료로 쳐요
     s = score_one(OMELETTE, {"달걀", "양파"}, {"대파", "소금", "식용유"}, set())
-    assert s.missing == [] and s.score == 1.0
+    assert s.missing == [] and s.score == round(3 / 3.5, 4)
 
 
 def test_full_mode_keeps_only_complete_recipes():
@@ -36,14 +36,29 @@ def test_full_mode_keeps_only_complete_recipes():
 def test_most_mode_requires_half():
     have = ["김치", "대파"]  # 김치볶음밥 2/5, 김치찌개 2/5, 달걀말이 1/3
     assert rank([KIMCHI_RICE, OMELETTE, STEW], have, PANTRY, mode="most") == []
-    assert len(rank([KIMCHI_RICE, OMELETTE, STEW], have, PANTRY, mode="all")) == 3
+
+
+def test_all_mode_drops_recipes_missing_many():
+    # 하나만 겹쳐도 다 넣으면 개수가 부풀려져요 — 부족 2개 이하이거나 절반 이상 가진 요리만
+    have = ["김치", "대파"]  # 김치볶음밥·김치찌개는 3개 부족, 달걀말이는 2개 부족
+    assert [s.id for s in rank([KIMCHI_RICE, OMELETTE, STEW], have, PANTRY, mode="all")] == [2]
+    big = Candidate(9, "일품", 30, ["a", "b", "c", "d", "e", "f"], [])
+    assert [s.id for s in rank([big], ["a", "b", "c"], [])] == [9]  # 3개 부족이어도 절반이면 보여 줘요
+
+
+def test_small_recipe_does_not_outrank_bigger_full_recipe():
+    tiny = Candidate(20, "반찬", 5, ["달걀"], [])  # 1/1
+    half = Candidate(21, "반찬", 5, ["달걀", "두부"], [])  # 1/2
+    have = ["김치", "밥", "스팸", "대파", "달걀", "양파"]
+    ids = [s.id for s in rank([tiny, half, KIMCHI_RICE, STEW], have, PANTRY)]
+    assert ids == [1, 20, 3, 21]  # 5/5 > 1/1 > 3/5 > 1/2
 
 
 def test_sort_by_match_then_missing_then_time():
     have = ["김치", "밥", "스팸", "대파", "달걀", "양파"]
     ids = [s.id for s in rank([STEW, OMELETTE, KIMCHI_RICE], have, PANTRY)]
-    # 달걀말이(3/3, 10분)와 김치볶음밥(5/5, 15분)은 점수가 같아서 시간 순, 김치찌개(3/5)는 마지막
-    assert ids == [2, 1, 3]
+    # 둘 다 재료가 다 있으면 내 재료를 더 많이 쓰는 김치볶음밥(5/5)이 달걀말이(3/3)보다 앞, 김치찌개(3/5)는 마지막
+    assert ids == [1, 2, 3]
 
 
 def test_sort_by_time():

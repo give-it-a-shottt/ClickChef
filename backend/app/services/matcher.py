@@ -1,7 +1,11 @@
 """재료 일치도 계산 — DB와 분리된 순수 함수라서 pytest로 바로 검증할 수 있어요.
 
 규칙
-- 점수 = 가진 주재료 수 ÷ 필요한 주재료 수
+- 점수 = 가진 주재료 수 ÷ (필요한 주재료 수 + 0.5)
+  · 0.5를 더하는 이유: 그냥 나누면 재료 1개짜리(1/1)와 5개짜리(5/5)가 똑같이 1.0이라
+    재료가 적은 요리가 위로 몰려요. 0.5를 더하면 1/1=0.67, 5/5=0.91로 내 재료를 많이 쓰는 요리가 앞에 와요.
+- '전체' 보기에도 부족한 주재료가 2개 이하이거나 절반 이상 가진 요리만 넣어요
+  (하나만 겹쳐도 다 넣으면 개수가 부풀려지고 못 만드는 요리가 섞여요)
 - 기본 양념(pantry)에 있는 재료는 가진 것으로 쳐요
 - 없는 양념은 '부족' 목록에는 넣지 않고 점수만 조금 깎아요 (양념 하나 때문에 추천이 빠지지 않게)
 - 피드백을 준 요리와 같은 종류는 조금 올려요
@@ -13,8 +17,11 @@ from typing import Literal
 MatchMode = Literal["all", "most", "one", "full"]
 SortKey = Literal["match", "time", "missing"]
 
+SMOOTHING = 0.5
 SEASONING_PENALTY = 0.02
 LIKED_BONUS = 0.03
+ALL_MAX_MISSING = 2  # '전체' 보기: 부족한 주재료가 이만큼 이하이거나
+ALL_MIN_RATIO = 0.5  # 이 비율 이상 가지고 있으면 보여 줘요
 
 
 @dataclass(frozen=True)
@@ -43,7 +50,7 @@ def score_one(c: Candidate, have: set[str], pantry: set[str], liked_categories: 
     missing = [i for i in mains if i not in owned]
     missing_seasonings = [s for s in c.seasonings if s not in owned]
     need = len(mains)
-    ratio = len(have_main) / need if need else 0.0
+    ratio = len(have_main) / (need + SMOOTHING) if need else 0.0
     score = ratio - SEASONING_PENALTY * len(missing_seasonings)
     if c.category in liked_categories:
         score += LIKED_BONUS
@@ -59,7 +66,7 @@ def passes(s: Scored, mode: MatchMode) -> bool:
         return len(s.missing) <= 1
     if mode == "most":
         return s.have / s.need >= 0.5
-    return True
+    return len(s.missing) <= ALL_MAX_MISSING or s.have / s.need >= ALL_MIN_RATIO
 
 
 def rank(
