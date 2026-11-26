@@ -1,0 +1,21 @@
+# 로컬 개발·테스트용 PostgreSQL. 운영은 Neon을 써요.
+# 실행: docker compose up -d   →   python scripts/data/seed_db.py
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: clickchef
+      POSTGRES_PASSWORD: clickchef
+      POSTGRES_DB: clickchef
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U clickchef"]
+      interval: 2s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  pgdata:

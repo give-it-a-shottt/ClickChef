@@ -1,0 +1,7 @@
+# Vercel Python 함수가 설치하는 런타임 의존성
+fastapi==0.165.0
+psycopg[binary]==3.3.9
+psycopg-pool==3.3.3
+pydantic==2.14.4
+python-multipart==0.0.34
+google-genai==3.6.1

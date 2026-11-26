@@ -1,0 +1,325 @@
+[
+  {
+    "id": 1,
+    "name": "김치볶음밥",
+    "summary": "남은 김치와 찬밥으로 15분 만에 만드는 한 그릇",
+    "category": "밥",
+    "method": "볶기",
+    "timeMin": 15,
+    "servings": 1,
+    "difficulty": "쉬움",
+    "kcal": 540,
+    "imageUrl": null,
+    "ingredients": [
+      { "name": "김치", "amount": "1컵", "kind": "main" },
+      { "name": "밥", "amount": "1공기", "kind": "main" },
+      { "name": "스팸", "amount": "1/2캔", "kind": "main" },
+      { "name": "대파", "amount": "1/2대", "kind": "main" },
+      { "name": "달걀", "amount": "1개", "kind": "main" },
+      { "name": "식용유", "amount": "1스푼", "kind": "seasoning" },
+      { "name": "간장", "amount": "1스푼", "kind": "seasoning" },
+      { "name": "참기름", "amount": "약간", "kind": "seasoning" }
+    ],
+    "steps": [
+      { "order": 1, "text": "대파는 송송 썰고, 김치와 스팸은 한입 크기로 썰어 주세요.", "ingredients": ["대파", "김치", "스팸"], "timerSec": null, "imageUrl": null },
+      { "order": 2, "text": "팬에 식용유를 두르고 대파를 볶다가, 김치와 스팸을 넣어 중불에서 3분 볶아 주세요.", "ingredients": ["식용유", "대파", "김치", "스팸"], "timerSec": 180, "imageUrl": null },
+      { "order": 3, "text": "밥을 넣고 고루 섞은 뒤 간장 1스푼으로 간을 맞춰 주세요.", "ingredients": ["밥", "간장"], "timerSec": 120, "imageUrl": null },
+      { "order": 4, "text": "불을 끄고 참기름을 두른 뒤, 달걀프라이를 올려 마무리해요.", "ingredients": ["참기름", "달걀"], "timerSec": null, "imageUrl": null }
+    ],
+    "tip": "김치를 충분히 볶아야 신맛이 줄고 감칠맛이 살아나요."
+  },
+  {
+    "id": 2,
+    "name": "달걀말이",
+    "summary": "대파와 양파를 넣어 폭신하게 말아 낸 반찬",
+    "category": "반찬",
+    "method": "굽기",
+    "timeMin": 10,
+    "servings": 2,
+    "difficulty": "쉬움",
+    "kcal": 230,
+    "imageUrl": null,
+    "ingredients": [
+      { "name": "달걀", "amount": "4개", "kind": "main" },
+      { "name": "대파", "amount": "1/4대", "kind": "main" },
+      { "name": "양파", "amount": "1/4개", "kind": "main" },
+      { "name": "소금", "amount": "약간", "kind": "seasoning" },
+      { "name": "식용유", "amount": "1스푼", "kind": "seasoning" }
+    ],
+    "steps": [
+      { "order": 1, "text": "대파와 양파를 잘게 다져 주세요.", "ingredients": ["대파", "양파"], "timerSec": null, "imageUrl": null },
+      { "order": 2, "text": "달걀을 풀고 다진 채소와 소금을 넣어 섞어 주세요.", "ingredients": ["달걀", "소금"], "timerSec": null, "imageUrl": null },
+      { "order": 3, "text": "약불로 달군 팬에 식용유를 얇게 바르고, 달걀물을 1/3씩 부어 가며 돌돌 말아 주세요.", "ingredients": ["식용유"], "timerSec": 300, "imageUrl": null },
+      { "order": 4, "text": "한 김 식힌 뒤 먹기 좋게 썰어 주세요.", "ingredients": [], "timerSec": null, "imageUrl": null }
+    ],
+    "tip": "불이 세면 겉이 타요. 약불에서 천천히 말아야 모양이 예뻐요."
+  },
+  {
+    "id": 3,
+    "name": "김치찌개",
+    "summary": "잘 익은 김치와 두부로 끓인 얼큰한 찌개",
+    "category": "국&찌개",
+    "method": "끓이기",
+    "timeMin": 25,
+    "servings": 2,
+    "difficulty": "보통",
+    "kcal": 380,
+    "imageUrl": null,
+    "ingredients": [
+      { "name": "김치", "amount": "2컵", "kind": "main" },
+      { "name": "돼지고기", "amount": "150g", "kind": "main" },
+      { "name": "두부", "amount": "1/2모", "kind": "main" },
+      { "name": "대파", "amount": "1/2대", "kind": "main" },
+      { "name": "양파", "amount": "1/2개", "kind": "main" },
+      { "name": "고춧가루", "amount": "1스푼", "kind": "seasoning" },
+      { "name": "마늘", "amount": "1스푼", "kind": "seasoning" },
+      { "name": "간장", "amount": "1스푼", "kind": "seasoning" }
+    ],
+    "steps": [
+      { "order": 1, "text": "김치와 돼지고기는 한입 크기로, 두부와 양파는 도톰하게, 대파는 어슷하게 썰어 주세요.", "ingredients": ["김치", "돼지고기", "두부", "양파", "대파"], "timerSec": null, "imageUrl": null },
+      { "order": 2, "text": "냄비에 돼지고기와 김치를 넣고 중불에서 5분 볶아 주세요.", "ingredients": ["돼지고기", "김치"], "timerSec": 300, "imageUrl": null },
+      { "order": 3, "text": "물 3컵, 고춧가루, 마늘, 간장을 넣고 끓으면 양파와 두부를 넣어 10분 더 끓여 주세요.", "ingredients": ["고춧가루", "마늘", "간장", "양파", "두부"], "timerSec": 600, "imageUrl": null },
+      { "order": 4, "text": "대파를 넣고 한소끔 끓여 마무리해요.", "ingredients": ["대파"], "timerSec": 60, "imageUrl": null }
+    ],
+    "tip": "김치 국물을 반 컵 넣으면 맛이 훨씬 깊어져요."
+  },
+  {
+    "id": 4,
+    "name": "된장찌개",
+    "summary": "애호박과 두부를 듬뿍 넣은 구수한 집밥 찌개",
+    "category": "국&찌개",
+    "method": "끓이기",
+    "timeMin": 20,
+    "servings": 2,
+    "difficulty": "쉬움",
+    "kcal": 260,
+    "imageUrl": null,
+    "ingredients": [
+      { "name": "두부", "amount": "1/2모", "kind": "main" },
+      { "name": "애호박", "amount": "1/3개", "kind": "main" },
+      { "name": "양파", "amount": "1/2개", "kind": "main" },
+      { "name": "대파", "amount": "1/3대", "kind": "main" },
+      { "name": "된장", "amount": "2스푼", "kind": "seasoning" },
+      { "name": "마늘", "amount": "1/2스푼", "kind": "seasoning" },
+      { "name": "고춧가루", "amount": "약간", "kind": "seasoning" }
+    ],
+    "steps": [
+      { "order": 1, "text": "두부·애호박·양파는 깍둑 썰고, 대파는 송송 썰어 주세요.", "ingredients": ["두부", "애호박", "양파", "대파"], "timerSec": null, "imageUrl": null },
+      { "order": 2, "text": "물 2컵에 된장을 풀어 끓여 주세요.", "ingredients": ["된장"], "timerSec": 180, "imageUrl": null },
+      { "order": 3, "text": "양파와 애호박, 마늘을 넣고 5분 끓인 뒤 두부를 넣어 주세요.", "ingredients": ["양파", "애호박", "마늘", "두부"], "timerSec": 300, "imageUrl": null },
+      { "order": 4, "text": "대파와 고춧가루를 넣고 한 번 더 끓여 마무리해요.", "ingredients": ["대파", "고춧가루"], "timerSec": 60, "imageUrl": null }
+    ],
+    "tip": "된장은 체에 걸러 풀면 국물이 깔끔해요."
+  },
+  {
+    "id": 5,
+    "name": "스팸김치덮밥",
+    "summary": "짭짤한 스팸과 볶은 김치를 밥 위에 올린 든든한 덮밥",
+    "category": "일품",
+    "method": "볶기",
+    "timeMin": 15,
+    "servings": 1,
+    "difficulty": "쉬움",
+    "kcal": 610,
+    "imageUrl": null,
+    "ingredients": [
+      { "name": "스팸", "amount": "1/2캔", "kind": "main" },
+      { "name": "김치", "amount": "1/2컵", "kind": "main" },
+      { "name": "밥", "amount": "1공기", "kind": "main" },
+      { "name": "양파", "amount": "1/4개", "kind": "main" },
+      { "name": "설탕", "amount": "1/2스푼", "kind": "seasoning" },
+      { "name": "식용유", "amount": "1스푼", "kind": "seasoning" }
+    ],
+    "steps": [
+      { "order": 1, "text": "스팸은 깍둑 썰고 김치와 양파는 채 썰어 주세요.", "ingredients": ["스팸", "김치", "양파"], "timerSec": null, "imageUrl": null },
+      { "order": 2, "text": "식용유를 두른 팬에 스팸을 노릇하게 구운 뒤 김치·양파·설탕을 넣고 3분 볶아 주세요.", "ingredients": ["식용유", "스팸", "김치", "양파", "설탕"], "timerSec": 180, "imageUrl": null },
+      { "order": 3, "text": "그릇에 밥을 담고 볶은 재료를 올려 주세요.", "ingredients": ["밥"], "timerSec": null, "imageUrl": null }
+    ],
+    "tip": "설탕을 조금 넣으면 김치의 신맛이 부드러워져요."
+  },
+  {
+    "id": 6,
+    "name": "양파달걀볶음",
+    "summary": "양파의 단맛과 부드러운 달걀이 어우러진 5분 반찬",
+    "category": "반찬",
+    "method": "볶기",
+    "timeMin": 10,
+    "servings": 2,
+    "difficulty": "쉬움",
+    "kcal": 190,
+    "imageUrl": null,
+    "ingredients": [
+      { "name": "양파", "amount": "1개", "kind": "main" },
+      { "name": "달걀", "amount": "3개", "kind": "main" },
+      { "name": "대파", "amount": "약간", "kind": "main" },
+      { "name": "소금", "amount": "약간", "kind": "seasoning" },
+      { "name": "식용유", "amount": "1스푼", "kind": "seasoning" },
+      { "name": "후추", "amount": "약간", "kind": "seasoning" }
+    ],
+    "steps": [
+      { "order": 1, "text": "양파는 채 썰고 달걀은 소금을 넣어 풀어 주세요.", "ingredients": ["양파", "달걀", "소금"], "timerSec": null, "imageUrl": null },
+      { "order": 2, "text": "식용유를 두른 팬에 달걀을 반쯤 익혀 덜어 주세요.", "ingredients": ["식용유", "달걀"], "timerSec": 60, "imageUrl": null },
+      { "order": 3, "text": "같은 팬에 양파를 2분 볶고 달걀을 다시 넣어 섞은 뒤 후추와 대파로 마무리해요.", "ingredients": ["양파", "후추", "대파"], "timerSec": 120, "imageUrl": null }
+    ],
+    "tip": "달걀을 먼저 반만 익혀 두면 끝까지 부드러워요."
+  },
+  {
+    "id": 7,
+    "name": "달걀국",
+    "summary": "대파와 달걀만으로 끓이는 맑고 순한 국",
+    "category": "국&찌개",
+    "method": "끓이기",
+    "timeMin": 10,
+    "servings": 2,
+    "difficulty": "쉬움",
+    "kcal": 120,
+    "imageUrl": null,
+    "ingredients": [
+      { "name": "달걀", "amount": "2개", "kind": "main" },
+      { "name": "대파", "amount": "1/2대", "kind": "main" },
+      { "name": "간장", "amount": "1스푼", "kind": "seasoning" },
+      { "name": "소금", "amount": "약간", "kind": "seasoning" },
+      { "name": "마늘", "amount": "1/2스푼", "kind": "seasoning" }
+    ],
+    "steps": [
+      { "order": 1, "text": "물 3컵을 끓이고 간장, 마늘, 소금으로 간을 해 주세요.", "ingredients": ["간장", "마늘", "소금"], "timerSec": 180, "imageUrl": null },
+      { "order": 2, "text": "풀어 둔 달걀을 둥글게 돌려 붓고 젓지 말고 30초 기다려 주세요.", "ingredients": ["달걀"], "timerSec": 30, "imageUrl": null },
+      { "order": 3, "text": "송송 썬 대파를 넣고 불을 꺼 주세요.", "ingredients": ["대파"], "timerSec": null, "imageUrl": null }
+    ],
+    "tip": "달걀을 넣고 바로 저으면 국물이 탁해져요."
+  },
+  {
+    "id": 8,
+    "name": "스팸마요덮밥",
+    "summary": "구운 스팸과 스크램블에 마요네즈를 뿌린 한 그릇",
+    "category": "일품",
+    "method": "굽기",
+    "timeMin": 15,
+    "servings": 1,
+    "difficulty": "쉬움",
+    "kcal": 680,
+    "imageUrl": null,
+    "ingredients": [
+      { "name": "스팸", "amount": "1/2캔", "kind": "main" },
+      { "name": "달걀", "amount": "2개", "kind": "main" },
+      { "name": "밥", "amount": "1공기", "kind": "main" },
+      { "name": "양파", "amount": "1/4개", "kind": "main" },
+      { "name": "마요네즈", "amount": "1스푼", "kind": "seasoning" },
+      { "name": "간장", "amount": "1스푼", "kind": "seasoning" },
+      { "name": "설탕", "amount": "1/2스푼", "kind": "seasoning" }
+    ],
+    "steps": [
+      { "order": 1, "text": "스팸을 깍둑 썰어 노릇하게 구워 주세요.", "ingredients": ["스팸"], "timerSec": 180, "imageUrl": null },
+      { "order": 2, "text": "양파를 볶다가 간장과 설탕을 넣어 조려 주세요.", "ingredients": ["양파", "간장", "설탕"], "timerSec": 120, "imageUrl": null },
+      { "order": 3, "text": "달걀은 스크램블로 익혀 주세요.", "ingredients": ["달걀"], "timerSec": 60, "imageUrl": null },
+      { "order": 4, "text": "밥 위에 양파, 스팸, 달걀을 올리고 마요네즈를 뿌려 주세요.", "ingredients": ["밥", "마요네즈"], "timerSec": null, "imageUrl": null }
+    ],
+    "tip": "김가루를 올리면 훨씬 맛있어요."
+  },
+  {
+    "id": 9,
+    "name": "김치전",
+    "summary": "바삭하게 부친 김치전, 비 오는 날 간식으로 좋아요",
+    "category": "반찬",
+    "method": "부치기",
+    "timeMin": 20,
+    "servings": 2,
+    "difficulty": "보통",
+    "kcal": 420,
+    "imageUrl": null,
+    "ingredients": [
+      { "name": "김치", "amount": "1컵", "kind": "main" },
+      { "name": "양파", "amount": "1/4개", "kind": "main" },
+      { "name": "부침가루", "amount": "1컵", "kind": "seasoning" },
+      { "name": "식용유", "amount": "3스푼", "kind": "seasoning" },
+      { "name": "설탕", "amount": "약간", "kind": "seasoning" }
+    ],
+    "steps": [
+      { "order": 1, "text": "김치와 양파를 잘게 썰어 주세요.", "ingredients": ["김치", "양파"], "timerSec": null, "imageUrl": null },
+      { "order": 2, "text": "부침가루에 찬물 2/3컵과 김치 국물, 설탕을 넣고 섞어 주세요.", "ingredients": ["부침가루", "설탕"], "timerSec": null, "imageUrl": null },
+      { "order": 3, "text": "기름을 넉넉히 두른 팬에 얇게 펴서 앞뒤로 3분씩 부쳐 주세요.", "ingredients": ["식용유"], "timerSec": 360, "imageUrl": null }
+    ],
+    "tip": "반죽을 얇게 펴야 가장자리가 바삭해요."
+  },
+  {
+    "id": 10,
+    "name": "두부조림",
+    "summary": "노릇하게 구운 두부를 매콤달콤하게 조린 밥반찬",
+    "category": "반찬",
+    "method": "조리기",
+    "timeMin": 20,
+    "servings": 2,
+    "difficulty": "보통",
+    "kcal": 280,
+    "imageUrl": null,
+    "ingredients": [
+      { "name": "두부", "amount": "1모", "kind": "main" },
+      { "name": "대파", "amount": "1/3대", "kind": "main" },
+      { "name": "간장", "amount": "3스푼", "kind": "seasoning" },
+      { "name": "고춧가루", "amount": "1스푼", "kind": "seasoning" },
+      { "name": "설탕", "amount": "1스푼", "kind": "seasoning" },
+      { "name": "마늘", "amount": "1스푼", "kind": "seasoning" },
+      { "name": "식용유", "amount": "2스푼", "kind": "seasoning" }
+    ],
+    "steps": [
+      { "order": 1, "text": "두부를 1cm 두께로 썰어 키친타월로 물기를 빼 주세요.", "ingredients": ["두부"], "timerSec": null, "imageUrl": null },
+      { "order": 2, "text": "식용유를 두른 팬에 두부를 앞뒤로 노릇하게 구워 주세요.", "ingredients": ["식용유"], "timerSec": 300, "imageUrl": null },
+      { "order": 3, "text": "간장, 고춧가루, 설탕, 마늘, 물 1/2컵을 섞어 붓고 약불에서 5분 조려 주세요.", "ingredients": ["간장", "고춧가루", "설탕", "마늘"], "timerSec": 300, "imageUrl": null },
+      { "order": 4, "text": "대파를 올려 마무리해요.", "ingredients": ["대파"], "timerSec": null, "imageUrl": null }
+    ],
+    "tip": "두부 물기를 충분히 빼야 기름이 튀지 않아요."
+  },
+  {
+    "id": 11,
+    "name": "애호박전",
+    "summary": "달걀옷을 입혀 부친 담백한 애호박전",
+    "category": "반찬",
+    "method": "부치기",
+    "timeMin": 20,
+    "servings": 2,
+    "difficulty": "쉬움",
+    "kcal": 210,
+    "imageUrl": null,
+    "ingredients": [
+      { "name": "애호박", "amount": "1개", "kind": "main" },
+      { "name": "달걀", "amount": "2개", "kind": "main" },
+      { "name": "밀가루", "amount": "3스푼", "kind": "seasoning" },
+      { "name": "소금", "amount": "약간", "kind": "seasoning" },
+      { "name": "식용유", "amount": "2스푼", "kind": "seasoning" }
+    ],
+    "steps": [
+      { "order": 1, "text": "애호박을 0.5cm 두께로 동그랗게 썰고 소금을 살짝 뿌려 10분 두세요.", "ingredients": ["애호박", "소금"], "timerSec": 600, "imageUrl": null },
+      { "order": 2, "text": "물기를 닦고 밀가루를 얇게 묻힌 뒤 달걀물을 입혀 주세요.", "ingredients": ["밀가루", "달걀"], "timerSec": null, "imageUrl": null },
+      { "order": 3, "text": "식용유를 두른 팬에 중약불로 앞뒤 노릇하게 부쳐 주세요.", "ingredients": ["식용유"], "timerSec": 240, "imageUrl": null }
+    ],
+    "tip": "소금에 살짝 절이면 애호박이 부서지지 않아요."
+  },
+  {
+    "id": 12,
+    "name": "대파제육볶음",
+    "summary": "대파를 듬뿍 넣어 불향 나게 볶은 매콤한 제육",
+    "category": "일품",
+    "method": "볶기",
+    "timeMin": 30,
+    "servings": 2,
+    "difficulty": "보통",
+    "kcal": 650,
+    "imageUrl": null,
+    "ingredients": [
+      { "name": "돼지고기", "amount": "300g", "kind": "main" },
+      { "name": "대파", "amount": "1대", "kind": "main" },
+      { "name": "양파", "amount": "1/2개", "kind": "main" },
+      { "name": "고추장", "amount": "2스푼", "kind": "seasoning" },
+      { "name": "고춧가루", "amount": "1스푼", "kind": "seasoning" },
+      { "name": "간장", "amount": "1스푼", "kind": "seasoning" },
+      { "name": "설탕", "amount": "1스푼", "kind": "seasoning" },
+      { "name": "마늘", "amount": "1스푼", "kind": "seasoning" }
+    ],
+    "steps": [
+      { "order": 1, "text": "고추장, 고춧가루, 간장, 설탕, 마늘을 섞어 양념장을 만들어 주세요.", "ingredients": ["고추장", "고춧가루", "간장", "설탕", "마늘"], "timerSec": null, "imageUrl": null },
+      { "order": 2, "text": "돼지고기에 양념장을 버무려 15분 재워 두세요.", "ingredients": ["돼지고기"], "timerSec": 900, "imageUrl": null },
+      { "order": 3, "text": "센불에서 고기를 볶다가 양파와 대파를 넣고 5분 더 볶아 주세요.", "ingredients": ["양파", "대파"], "timerSec": 300, "imageUrl": null }
+    ],
+    "tip": "대파를 먼저 기름에 볶아 파기름을 내면 불향이 살아나요."
+  }
+]
