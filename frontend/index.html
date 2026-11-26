@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>찰칵셰프 — 냉장고 재료, 찍기만 하세요</title>
+    <meta name="description" content="사진 한 장이면 지금 만들 수 있는 한식을 찾아 드려요. 없는 재료는 빼고, 있는 재료로만 골라 드려요." />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#18181d" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/logo/app-icon.svg" />
+    <meta property="og:title" content="찰칵셰프" />
+    <meta property="og:description" content="냉장고 재료, 찍기만 하세요" />
+    <meta property="og:type" content="website" />
+    <!-- Pretendard 가변 폰트: 화면에 쓰인 글자만 내려받는 dynamic subset -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+    <script>
+      // 첫 화면이 그려지기 전에 저장된 테마를 적용해서 깜빡임을 막아요.
+      try {
+        var t = JSON.parse(localStorage.getItem('clickchef-prefs') || '{}').state?.theme
+        if (t && t !== 'system') document.documentElement.dataset.theme = t
+      } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
