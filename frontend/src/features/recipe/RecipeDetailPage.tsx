@@ -13,12 +13,12 @@ import { Badge } from '@/components/ui/Badge'
 import { Button, ButtonLink } from '@/components/ui/Button'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { IconButton } from '@/components/ui/IconButton'
-import { useMyIngredients } from '@/features/capture/useMyIngredients'
 import { categoryLabel } from '@/lib/category'
 import { useBack } from '@/lib/useBack'
 import { cx } from '@/lib/cx'
 import { useIsDesktop } from '@/lib/useMediaQuery'
 import { useLibraryStore } from '@/stores/libraryStore'
+import { useIngredientStatus } from './useIngredientStatus'
 import { useRecipeActions } from './useRecipeActions'
 
 /** 05 레시피 상세 / P05 */
@@ -53,17 +53,6 @@ export default function RecipeDetailPage() {
     )
   }
   return isDesktop ? <DesktopDetail recipe={recipe} /> : <MobileDetail recipe={recipe} />
-}
-
-/** 내 재료 기준으로 주재료마다 있음/없음을 계산해요. 내 재료 정보가 없으면 표시하지 않아요. */
-function useIngredientStatus(recipe: RecipeDetail) {
-  const { have, pantry } = useMyIngredients()
-  const owned = new Set([...have, ...pantry])
-  const mains = recipe.ingredients.filter((i) => i.kind === 'main')
-  const seasonings = recipe.ingredients.filter((i) => i.kind === 'seasoning')
-  const known = have.length > 0
-  const haveCount = mains.filter((i) => owned.has(i.name)).length
-  return { mains, seasonings, known, owned, haveCount }
 }
 
 function Info({ recipe, desktop }: { recipe: RecipeDetail; desktop: boolean }) {
